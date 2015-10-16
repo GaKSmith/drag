@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<style>
+			#jam{
+				position: absolute;
+				left : 450px;
+				top : 100px;
+				/*draggable:true;*/
+			}
+			#posX{
+				position: absolute;
+				left: 500px;		
+			}
+
+		</style>
+	</head>
+
+	<body>		
+		<img id="jam" src="http://www.warnerbros.com/archive/spacejam/movie/img/p-jamlogo.gif" draggable="true">
+		<br><br><br><br><br><br><br><br><br><br>
+		<h1 id ="posX">Pos x</h1>
+		<!-- <h1 id ="posY">Pos y</h1> -->
+		<script>
+
+			$( document ).ready(function() {
+				var topHeight = 100;
+				var leftWidth = 500;
+				function startMoving(deltaDistance)
+				{
+					setInterval(function()
+					 	{
+					 	leftWidth += deltaDistance;		 	
+					 	
+					 	$("#jam").css("left",leftWidth + "px");
+					 	}, 
+					 	10);
+			
+					setInterval(function()
+					 {	 		
+					 	deltaDistance /= 1.4;
+					 }, 
+					 200);
+				}
+					
+				
+				$("img").on("mouseup",function(event){
+					console.log("image is mouse up");
+					$("#jam").hide();
+					$("#posY").text(event.clientX);
+				});
+				$("img").on("mousedown",function(event){
+					console.log("image is mouse down");
+					$("#posY").text(event.clientX);
+				});
+				var hasMouseMoved = false;
+				var originLeft;
+				 $(document).on("mousemove",function(event){
+				 	var mouseLeft = event.screenX;
+				 	if (hasMouseMoved === false)
+				 	{
+				 		originLeft = mouseLeft;
+				 	}
+
+				 	hasMouseMoved = true;
+				 	
+				 	$("#jam").css("left",mouseLeft);
+				 	if (mouseLeft < originLeft - 100)
+				 	{
+				 		$("#posX").text("You have picked left!!!");
+				 		$(document).off("mousemove");
+				 		startMoving(-8);
+				 	}
+				 	else if (mouseLeft > originLeft + 100)
+				 	{
+				 		$("#posX").text("You have picked right!!!");
+				 		$(document).off("mousemove");
+				 		startMoving(8);
+				 	}
+				});
+
+				 $("#jam")[0].addEventListener('drag', function(event){
+				 	var leftPosition = event.screenX;
+				 	$(this).css("left",leftPosition);
+				 	event.preventDefault();
+				 	console.log("Everyone likes Space Jam");
+				 },false);
+			});
+		</script>
+	</body>
+</html>
